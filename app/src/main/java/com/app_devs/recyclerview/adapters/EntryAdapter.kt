@@ -3,7 +3,9 @@ package com.app_devs.recyclerview.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.app_devs.recyclerview.R
 import com.app_devs.recyclerview.databinding.ItemCardBinding
 import com.app_devs.recyclerview.models.EntryModel
 import com.bumptech.glide.Glide
@@ -21,6 +23,15 @@ open class EntryAdapter(private val context: Context, private val list:ArrayList
        {
            holder.binding.name.text=model.name
            Glide.with(context).load(model.image).into(holder.binding.ivPhoto)
+           if(position%2==0)
+           {
+               holder.binding.layout.setBackgroundColor(ContextCompat.getColor(context,R.color.evenBg))
+           }
+           else
+           {
+               holder.binding.
+                   layout.setBackgroundColor(ContextCompat.getColor(context,R.color.white))
+           }
        }
     }
 

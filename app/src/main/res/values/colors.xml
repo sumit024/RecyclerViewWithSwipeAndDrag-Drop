@@ -12,4 +12,5 @@
     <color name="toolbarColor">#D82E2F</color>
     <color name="addButtonColor">#FF6263</color>
     <color name="dividerColor">#EAEAEA</color>
+    <color name="evenBg">#CAD5E2</color>
 </resources>
