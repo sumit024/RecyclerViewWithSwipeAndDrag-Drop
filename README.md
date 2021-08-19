@@ -1,5 +1,2 @@
 # RecyclerViewWithSwipeAndDrag-Drop
-This app is made for implementation of recycler view.
-Its features include-
-1-Swipe to edit or delte
-2-Drag and drop cards
+This app is made for implementation of recycler view with features like swipe to edit/delete and drag-drop.
