@@ -2,10 +2,17 @@ package com.app_devs.recyclerview.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.app_devs.recyclerview.adapters.EntryAdapter
 import com.app_devs.recyclerview.models.EntryModel
 import com.app_devs.recyclerview.databinding.ActivityMainBinding
+import com.app_devs.recyclerview.utils.SwipeToDeleteCallback
+import com.app_devs.recyclerview.utils.SwipeToEditCallback
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
@@ -15,12 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        loadData()
-        binding.rv.layoutManager=LinearLayoutManager(this)
-        val adapter= EntryAdapter(this,list)
-        binding.rv.adapter=adapter
-
+        setRecyclerView()
 
     }
     private fun loadData()
@@ -37,6 +39,52 @@ class MainActivity : AppCompatActivity() {
         list.add(EntryModel("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNbjmnlzLycPBzci1ZnnWb_nivt8HLtto5DA&usqp=CAU","Photo 10"))
         list.add(EntryModel("https://clearreview.imgix.net/images/content/black-binocular-on-round-device-63901-1.jpg?auto=format%2Ccompress&dpr=1&fp-x=0.5&fp-y=0.5&h=560&ixlib=php-2.1.1&w=820","Photo 11"))
         list.add(EntryModel("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTphdxAyPMnHkLToCcKYG_VYlCvakOC7XFxzLC35788Ppxhk84CD5g1cfLDJYk8awbymdY&usqp=CAU","Photo 12"))
+
+    }
+    private fun setRecyclerView()
+    {
+        loadData()
+        binding.rv.layoutManager=LinearLayoutManager(this)
+        val adapter= EntryAdapter(this,list)
+        binding.rv.adapter=adapter
+
+        val editSwapHandler= object: SwipeToEditCallback(this){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                adapter.notifyItemChanged(viewHolder.adapterPosition)
+            }
+
+        }
+        val editItemTouchHelper=ItemTouchHelper(editSwapHandler)
+        editItemTouchHelper.attachToRecyclerView(binding.rv)
+
+        val deleteSwipeHandler=object :SwipeToDeleteCallback(this)
+        {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                list.removeAt(viewHolder.adapterPosition)
+                adapter.notifyItemRemoved(viewHolder.adapterPosition)
+            }
+        }
+        val deleteItemTouchHelper=ItemTouchHelper(deleteSwipeHandler)
+        deleteItemTouchHelper.attachToRecyclerView(binding.rv)
+
+        val dividerItemDecoration= DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        binding.rv.addItemDecoration(dividerItemDecoration)
+
+        val helper=ItemTouchHelper(object :ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN,0)
+        {
+            override fun onMove(recyclerView: RecyclerView, dragged: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                val draggedPos=dragged.adapterPosition
+                val targetPos=target.adapterPosition
+                Collections.swap(list,draggedPos,targetPos)
+                recyclerView.adapter!!.notifyItemMoved(draggedPos,targetPos)
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+            }
+        })
+        helper.attachToRecyclerView(binding.rv)
 
     }
 

@@ -1,9 +1,11 @@
 package com.app_devs.recyclerview.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.app_devs.recyclerview.R
 import com.app_devs.recyclerview.databinding.ItemCardBinding
@@ -38,5 +40,6 @@ open class EntryAdapter(private val context: Context, private val list:ArrayList
     override fun getItemCount(): Int {
        return list.size
     }
+
     class MyViewHolder(val binding: ItemCardBinding):RecyclerView.ViewHolder(binding.root)
 }
